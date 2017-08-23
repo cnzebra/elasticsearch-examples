@@ -1,0 +1,60 @@
+# ----------------------------------------------------------------------------------------------------------------------
+# 核心配置
+# ----------------------------------------------------------------------------------------------------------------------
+spring:
+  application:
+    name: "es-examples"
+  profiles:
+    active: default
+  main:
+    banner-mode: "log"
+  aop:
+    auto: true
+  jackson:
+    locale: "zh_CN"
+    time-zone: "GMT+8"
+    date-format: "yyyy-MM-dd HH:mm:ss"
+    joda-date-time-format: ${spring.jackson.date-format}
+    serialization:
+      indent-output: true
+      fail-on-self-references: true
+      write-dates-as-timestamps: false
+      write-null-map-values: true
+      write-empty-json-arrays: true
+      write-single-elem-arrays-unwrapped: false
+      write-enums-using-to-string: true
+    deserialization:
+      fail-on-unknown-properties: false
+  datasource:
+    type: "com.zaxxer.hikari.HikariDataSource"
+    driver-class-name: "com.mysql.jdbc.Driver"
+    url: "jdbc:mysql://10.211.55.18:3306/es_examples?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8"
+    username: "root"
+    password: "root"
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: "org.hibernate.cfg.ImprovedNamingStrategy"
+    properties:
+      hibernate:
+        format_sql: true
+
+# ----------------------------------------------------------------------------------------------------------------------
+# servlet容器配置
+# ----------------------------------------------------------------------------------------------------------------------
+server:
+  port: 8087
+  context-path: "/"
+
+# ----------------------------------------------------------------------------------------------------------------------
+# 端点配置
+# ----------------------------------------------------------------------------------------------------------------------
+endpoints:
+  sensitive: false
+
+info:
+  project:
+    name: "${spring.application.name}"
+    version: "1.0.0"
