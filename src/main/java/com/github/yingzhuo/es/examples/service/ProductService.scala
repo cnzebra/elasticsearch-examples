@@ -15,7 +15,7 @@ trait ProductService {
 
     def changeProductPrice(id: String, price: Double): Product
 
-    def changeProductPrice(id: String, description: String): Product
+    def changeProductDescription(id: String, description: String): Product
 
     def deleteProductById(id: String): Unit
 
@@ -59,7 +59,7 @@ class ProductServiceImpl @Autowired()(val productDao: ProductDao) extends Produc
     }
 
     @Transactional
-    override def changeProductPrice(id: String, description: String): Product = Option(id) match {
+    override def changeProductDescription(id: String, description: String): Product = Option(id) match {
         case None => null
         case Some(x) =>
             val product = productDao.findOne(x)
