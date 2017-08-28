@@ -40,6 +40,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    elasticsearch:
+      cluster-nodes: "10.211.55.18:9300"
 
 # ----------------------------------------------------------------------------------------------------------------------
 # servlet容器配置

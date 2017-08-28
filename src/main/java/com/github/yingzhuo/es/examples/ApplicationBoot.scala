@@ -23,6 +23,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
 import org.springframework.data.domain.AuditorAware
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories
 import org.springframework.data.jpa.repository.config.{EnableJpaAuditing, EnableJpaRepositories}
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
@@ -86,6 +87,10 @@ object ApplicationBoot extends App {
 
         @Bean
         def auditorAware(): AuditorAware[String] = AuditorProvider
+    }
+
+    @Configuration
+    @EnableElasticsearchRepositories(basePackages = Array("com.github.yingzhuo.es.examples")) class ApplicationBootConfigElasticsearch {
     }
 
     @Configuration
