@@ -8,15 +8,18 @@
 */
 package com.github.yingzhuo.es.examples.module
 
+import java.util.Date
 import javax.persistence._
 
-import com.github.yingzhuo.es.examples.module.listener._
+import com.github.yingzhuo.es.examples.module.listener.ProductListener
+import org.springframework.data.annotation.{CreatedBy, CreatedDate, LastModifiedDate}
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
 import scala.beans.BeanProperty
 
 @Entity
 @Table(name = "`T_PRODUCT`")
-@EntityListeners(Array(classOf[ProductListener]))
+@EntityListeners(Array(classOf[ProductListener], classOf[AuditingEntityListener]))
 class Product() extends AnyRef with Serializable {
 
     @Id
@@ -35,6 +38,23 @@ class Product() extends AnyRef with Serializable {
     @Column(name = "`DESCRIPTION`", length = 2000)
     @BeanProperty
     var description: String = _
+
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "`LAST_MODIFIED_DATE`")
+    @BeanProperty
+    var lastModified: Date = _
+
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "`CREATED_DATE`")
+    @BeanProperty
+    var created: Date = _
+
+    @CreatedBy
+    @Column(name = "`AUDITOR_ID`", length = 32)
+    @BeanProperty
+    var auditorId: String = _
 
     override def toString: String = s"Product(id=$id)"
 }

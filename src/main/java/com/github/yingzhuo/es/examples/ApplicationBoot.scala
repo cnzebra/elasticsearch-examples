@@ -13,11 +13,13 @@ import javax.persistence.EntityManagerFactory
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.github.yingzhuo.es.examples.module.listener.AuditorProvider
 import com.github.yingzhuo.es.examples.tool.IdGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
+import org.springframework.data.domain.AuditorAware
 import org.springframework.data.jpa.repository.config.{EnableJpaAuditing, EnableJpaRepositories}
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
@@ -75,6 +77,9 @@ object ApplicationBoot extends App {
         def transactionManager(entityManagerFactory: EntityManagerFactory): PlatformTransactionManager = {
             new JpaTransactionManager(entityManagerFactory)
         }
+
+        @Bean
+        def auditorAware(): AuditorAware[String] = AuditorProvider
     }
 
 }
