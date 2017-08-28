@@ -18,4 +18,9 @@ class ProductDoc extends Serializable {
     @BeanProperty
     var description: String = _
 
+    @BeanProperty
+    var price: Double = _
+
+    override def toString: String = s"ProductDoc(id=$id)"
+
 }

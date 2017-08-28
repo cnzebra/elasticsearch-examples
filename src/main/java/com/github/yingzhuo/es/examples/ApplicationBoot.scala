@@ -14,7 +14,7 @@ import javax.persistence.EntityManagerFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.github.yingzhuo.es.examples.dao.UserDao
-import com.github.yingzhuo.es.examples.module.listener.AuditorProvider
+import com.github.yingzhuo.es.examples.module.auditing.AuditorProvider
 import com.github.yingzhuo.es.examples.security.SecurityInterceptor
 import com.github.yingzhuo.es.examples.tool.{IdGenerator, PasswordHasher}
 import org.apache.commons.codec.digest.DigestUtils
@@ -74,7 +74,7 @@ object ApplicationBoot extends App {
     }
 
     @Configuration
-    @EnableJpaAuditing
+    @EnableJpaAuditing()
     @EnableJpaRepositories(Array("com.github.yingzhuo.es.examples"))
     @EnableTransactionManagement
     @ComponentScan(Array("com.github.yingzhuo.es.examples"))

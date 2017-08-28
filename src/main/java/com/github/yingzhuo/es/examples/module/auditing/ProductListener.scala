@@ -6,16 +6,28 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module.listener
+package com.github.yingzhuo.es.examples.module.auditing
 
-import com.github.yingzhuo.es.examples.security.SecurityContext
-import org.springframework.data.domain.AuditorAware
+import javax.persistence._
 
-object AuditorProvider extends AuditorAware[String] {
+import com.github.yingzhuo.es.examples.module.Product
+import com.typesafe.scalalogging.LazyLogging
 
-    override def getCurrentAuditor: String = SecurityContext.getOption match {
-        case Some(u) => u.name
-        case _ => null
+class ProductListener extends LazyLogging {
+
+    @PostPersist
+    def callbackPostPersist(product: Product): Unit = {
+        logger.debug("post persist: {}", product)
+    }
+
+    @PostRemove
+    def callbackPostRemove(product: Product): Unit = {
+        logger.debug("post remove: {}", product)
+    }
+
+    @PostUpdate
+    def callbackPostUpdate(product: Product): Unit = {
+        logger.debug("post update: {}", product)
     }
 
 }

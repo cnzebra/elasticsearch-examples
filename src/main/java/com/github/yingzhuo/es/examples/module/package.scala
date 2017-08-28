@@ -10,4 +10,31 @@ package com.github.yingzhuo.es.examples
 
 package object module {
 
+    import com.github.yingzhuo.es.examples.module._
+
+    implicit final class RichProductDoc(val doc: ProductDoc) {
+        require(doc != null)
+
+        def toProduct: Product = {
+            val prod = new Product
+            prod.id = doc.id
+            prod.name = doc.name
+            prod.price = doc.price
+            prod.description = doc.description
+            prod
+        }
+    }
+
+    implicit final class RichProduct(val prod: Product) {
+        require(prod != null)
+
+        def toProductDoc: ProductDoc = {
+            val doc = new ProductDoc
+            doc.id = prod.id
+            doc.name = prod.name
+            doc.price = prod.price
+            doc.description = prod.description
+            doc
+        }
+    }
 }

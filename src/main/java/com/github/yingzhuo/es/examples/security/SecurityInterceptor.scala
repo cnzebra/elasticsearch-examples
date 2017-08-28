@@ -26,7 +26,7 @@ class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHash
 
             if (exists.isEmpty) {
                 logger.debug("认证或授权错误")
-                throw new RefusedException
+                throw new RefusedOperationException
             } else {
                 SecurityContext.holder.set(exists.get)
             }
@@ -34,7 +34,7 @@ class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHash
             true
         case _ =>
             logger.debug("认证或授权缺失")
-            throw new RefusedException
+            throw new RefusedOperationException
     }
 
     private def getMethod(handler: scala.Any): Option[Method] = handler match {

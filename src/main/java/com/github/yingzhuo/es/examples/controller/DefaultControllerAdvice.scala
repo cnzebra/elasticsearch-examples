@@ -8,7 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.controller
 
-import com.github.yingzhuo.es.examples.security.RefusedException
+import com.github.yingzhuo.es.examples.security.RefusedOperationException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.{ExceptionHandler, ResponseStatus, RestControllerAdvice}
 
@@ -17,7 +17,7 @@ class DefaultControllerAdvice {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    def handleRefusedException(ex: RefusedException): Json = {
+    def handleRefusedException(ex: RefusedOperationException): Json = {
         Json("401", "401", Map())
     }
 

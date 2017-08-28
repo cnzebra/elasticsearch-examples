@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest
 
 package object security {
 
-    class RefusedException extends Exception
+    class RefusedOperationException extends Exception
 
     object BasicAuthentication {
 

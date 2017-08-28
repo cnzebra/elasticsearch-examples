@@ -11,7 +11,7 @@ package com.github.yingzhuo.es.examples.module
 import java.util.Date
 import javax.persistence._
 
-import com.github.yingzhuo.es.examples.module.listener.ProductListener
+import com.github.yingzhuo.es.examples.module.auditing.ProductListener
 import org.springframework.data.annotation.{CreatedBy, CreatedDate, LastModifiedDate}
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
