@@ -8,9 +8,22 @@
 */
 package com.github.yingzhuo.es.examples
 
+import com.github.yingzhuo.es.examples.module.Product
+
+import scala.beans.BeanProperty
+
 package object controller {
 
-    final case class Json(code: String = "200", errorMessage: String =  null, payload: Map[String, Any] = Map()) {
+    /* Json */
+
+    object Json {
+
+        def apply(p: Map[String, Any]): Json = new Json(p)
+
+        def apply(t: (String, Any)): Json = Json(Map(t._1 -> t._2))
+    }
+
+    final case class Json(code: String = "200", errorMessage: String = null, payload: Map[String, Any] = Map()) {
         def this(p: Map[String, Any]) = this(payload = p)
 
         def size: Int = payload match {
@@ -24,11 +37,30 @@ package object controller {
         }
     }
 
-    object Json {
+    /* Form */
 
-        def apply(p: Map[String, Any]): Json = new Json(p)
+    final class ProductForm {
+        @BeanProperty
+        var id: String = _
+        @BeanProperty
+        var name: String = _
+        @BeanProperty
+        var price: Double = _
+        @BeanProperty
+        var description: String = _
+    }
 
-        def apply(t: (String, Any)): Json = Json(Map(t._1 -> t._2))
+    implicit final class RichProductForm(val form: ProductForm) {
+        require(form != null, null)
+
+        def toProduct: Product = {
+            val prod = new Product()
+            prod.id = form.id
+            prod.name = form.name
+            prod.price = form.price
+            prod.description = form.description
+            prod
+        }
     }
 
 }

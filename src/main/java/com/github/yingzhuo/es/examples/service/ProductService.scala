@@ -10,12 +10,14 @@ package com.github.yingzhuo.es.examples.service
 
 import com.github.yingzhuo.es.examples.dao.ProductDao
 import com.github.yingzhuo.es.examples.module.Product
-import com.typesafe.scalalogging.LazyLogging
+import com.github.yingzhuo.es.examples.tool.IdGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 trait ProductService {
+
+    def saveProduct(product: Product): Product
 
     def findProductById(id: String): Product
 
@@ -30,7 +32,15 @@ trait ProductService {
 }
 
 @Service("productService")
-class ProductServiceImpl @Autowired()(val productDao: ProductDao) extends ProductService with LazyLogging {
+class ProductServiceImpl @Autowired()(val productDao: ProductDao, val idGenerator: IdGenerator[String]) extends ProductService {
+
+    @Transactional
+    override def saveProduct(product: Product): Product = {
+        if (product.id == null) {
+            product.id = idGenerator.generate
+        }
+        productDao.saveAndFlush(product)
+    }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     override def findProductById(id: String): Product = Option(id) match {

@@ -17,6 +17,14 @@ import org.springframework.web.bind.annotation._
 @RequestMapping(Array("/products"))
 class ProductController @Autowired()(val productService: ProductService) extends LazyLogging {
 
+    @PostMapping(Array("/"))
+    def saveOne(@RequestBody form: ProductForm): Json = {
+        logger.debug("新建产品")
+        var prod = form.toProduct
+        prod = productService.saveProduct(prod)
+        Json("product" -> prod)
+    }
+
     @GetMapping(Array("/{id}/"))
     def findOne(@PathVariable("id") id: String): Json = {
         logger.debug("通过ID({})查找产品", id)

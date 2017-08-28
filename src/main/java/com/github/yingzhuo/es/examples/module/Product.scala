@@ -9,7 +9,10 @@
 package com.github.yingzhuo.es.examples.module
 
 import javax.persistence._
+
 import com.github.yingzhuo.es.examples.module.listener._
+
+import scala.beans.BeanProperty
 
 @Entity
 @Table(name = "`T_PRODUCT`")
@@ -18,17 +21,20 @@ class Product() extends AnyRef with Serializable {
 
     @Id
     @Column(name = "`ID`", length = 32)
+    @BeanProperty
     var id: String = _
 
     @Column(name = "`NAME`", length = 40)
+    @BeanProperty
     var name: String = _
 
     @Column(name = "`PRICE`")
+    @BeanProperty
     var price: Double = _
 
     @Column(name = "`DESCRIPTION`", length = 2000)
+    @BeanProperty
     var description: String = _
 
     override def toString: String = s"Product(id=$id)"
-
 }

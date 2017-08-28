@@ -15,6 +15,8 @@ import com.typesafe.scalalogging.StrictLogging
 
 class ProductListener extends StrictLogging {
 
+    logger.info("创建实体监听对象({})", classOf[ProductListener].getName)
+
     @PostPersist
     def callbackPostPersist(product: Product): Unit = {
         logger.debug("post persist: {}", product)
