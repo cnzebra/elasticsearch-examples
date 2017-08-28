@@ -15,7 +15,7 @@ object AuditorProvider extends AuditorAware[String] {
 
     override def getCurrentAuditor: String = SecurityContext.getOption match {
         case Some(u) => u.name
-        case None => null
+        case _ => null
     }
 
 }

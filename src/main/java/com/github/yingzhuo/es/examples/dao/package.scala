@@ -6,28 +6,23 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module.listener
+package com.github.yingzhuo.es.examples
 
 import javax.persistence._
 
-import com.github.yingzhuo.es.examples.module.Product
-import com.typesafe.scalalogging.LazyLogging
+import org.springframework.beans.factory.InitializingBean
 
-class ProductListener extends LazyLogging {
+package object dao {
 
-    @PostPersist
-    def callbackPostPersist(product: Product): Unit = {
-        logger.debug("post persist: {}", product)
-    }
+    //noinspection VarCouldBeVal
+    abstract class AbstractDatabaseDao extends InitializingBean {
 
-    @PostRemove
-    def callbackPostRemove(product: Product): Unit = {
-        logger.debug("post remove: {}", product)
-    }
+        @PersistenceContext
+        private[this] var em: EntityManager = _
 
-    @PostUpdate
-    def callbackPostUpdate(product: Product): Unit = {
-        logger.debug("post update: {}", product)
+        protected def entityManager: EntityManager = em
+
+        override def afterPropertiesSet(): Unit = require(em != null)
     }
 
 }

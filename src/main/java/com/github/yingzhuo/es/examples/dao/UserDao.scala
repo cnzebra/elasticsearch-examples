@@ -11,8 +11,12 @@ package com.github.yingzhuo.es.examples.dao
 import com.github.yingzhuo.es.examples.module.User
 import org.springframework.data.jpa.repository.JpaRepository
 
-trait UserDao extends JpaRepository[User, String] {
+trait UserDao extends JpaRepository[User, String] with UserExtDao {
 
     def findByNameAndPassword(name: String, password: String): User
 
 }
+
+trait UserExtDao
+
+class UserDaoImpl extends AbstractDatabaseDao with UserExtDao
