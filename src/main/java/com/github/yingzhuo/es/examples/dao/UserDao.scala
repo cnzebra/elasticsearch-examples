@@ -6,16 +6,13 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module.listener
+package com.github.yingzhuo.es.examples.dao
 
-import com.github.yingzhuo.es.examples.security.SecurityContext
-import org.springframework.data.domain.AuditorAware
+import com.github.yingzhuo.es.examples.module.User
+import org.springframework.data.jpa.repository.JpaRepository
 
-object AuditorProvider extends AuditorAware[String] {
+trait UserDao extends JpaRepository[User, String] {
 
-    override def getCurrentAuditor: String = SecurityContext.getOption match {
-        case Some(u) => u.name
-        case None => null
-    }
+    def findByNameAndPassword(name: String, password: String): User
 
 }

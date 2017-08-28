@@ -6,16 +6,19 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module.listener
+package com.github.yingzhuo.es.examples.controller
 
-import com.github.yingzhuo.es.examples.security.SecurityContext
-import org.springframework.data.domain.AuditorAware
+import com.github.yingzhuo.es.examples.security.RefusedException
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.{ExceptionHandler, ResponseStatus, RestControllerAdvice}
 
-object AuditorProvider extends AuditorAware[String] {
+@RestControllerAdvice
+class DefaultControllerAdvice {
 
-    override def getCurrentAuditor: String = SecurityContext.getOption match {
-        case Some(u) => u.name
-        case None => null
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    def handleRefusedException(ex: RefusedException): Json = {
+        Json("401", "401", Map())
     }
 
 }

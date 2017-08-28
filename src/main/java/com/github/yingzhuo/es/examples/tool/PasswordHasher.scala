@@ -6,16 +6,11 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module.listener
+package com.github.yingzhuo.es.examples.tool
 
-import com.github.yingzhuo.es.examples.security.SecurityContext
-import org.springframework.data.domain.AuditorAware
+@FunctionalInterface
+trait PasswordHasher {
 
-object AuditorProvider extends AuditorAware[String] {
-
-    override def getCurrentAuditor: String = SecurityContext.getOption match {
-        case Some(u) => u.name
-        case None => null
-    }
+    def hash(s: String): String
 
 }

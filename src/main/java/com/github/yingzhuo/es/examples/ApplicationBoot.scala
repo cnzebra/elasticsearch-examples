@@ -13,8 +13,11 @@ import javax.persistence.EntityManagerFactory
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.github.yingzhuo.es.examples.dao.UserDao
 import com.github.yingzhuo.es.examples.module.listener.AuditorProvider
-import com.github.yingzhuo.es.examples.tool.IdGenerator
+import com.github.yingzhuo.es.examples.security.SecurityInterceptor
+import com.github.yingzhuo.es.examples.tool.{IdGenerator, PasswordHasher}
+import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -24,7 +27,7 @@ import org.springframework.data.jpa.repository.config.{EnableJpaAuditing, Enable
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.springframework.web.servlet.config.annotation.{PathMatchConfigurer, WebMvcConfigurerAdapter}
+import org.springframework.web.servlet.config.annotation.{InterceptorRegistry, PathMatchConfigurer, WebMvcConfigurerAdapter}
 import org.springframework.web.util.UrlPathHelper
 
 object ApplicationBoot extends App {
@@ -41,6 +44,9 @@ object ApplicationBoot extends App {
         def idGenerator(): IdGenerator[String] = new IdGenerator[String] {
             override def generate: String = UUID.randomUUID().toString.replaceAll("-", "")
         }
+
+        @Bean
+        def passwordHasher(): PasswordHasher = (s: String) => DigestUtils.md5Hex(s)
 
     }
 
@@ -80,6 +86,15 @@ object ApplicationBoot extends App {
 
         @Bean
         def auditorAware(): AuditorAware[String] = AuditorProvider
+    }
+
+    @Configuration
+    class ApplicationBootConfigSecurity @Autowired()(val userDao: UserDao, val passwordHasher: PasswordHasher) extends WebMvcConfigurerAdapter {
+
+        override def addInterceptors(registry: InterceptorRegistry): Unit = {
+            registry.addInterceptor(new SecurityInterceptor(userDao, passwordHasher)).addPathPatterns("/**")
+        }
+
     }
 
 }

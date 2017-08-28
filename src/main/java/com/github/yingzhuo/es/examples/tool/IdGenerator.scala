@@ -8,6 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.tool
 
+@FunctionalInterface
 trait IdGenerator[ID] {
 
     def generate: ID
