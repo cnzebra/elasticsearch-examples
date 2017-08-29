@@ -8,7 +8,10 @@
 */
 package com.github.yingzhuo.es
 
-import org.apache.commons.codec.digest.DigestUtils
+import java.math.BigInteger
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+
 import org.springframework.context.{ApplicationContext, ApplicationContextAware}
 
 package object examples {
@@ -28,7 +31,12 @@ package object examples {
     }
 
     object DefaultPasswordHasher extends PasswordHasher {
-        override def hash(s: String): String = DigestUtils.md5Hex(s)
+        override def hash(s: String): String = {
+            val m = MessageDigest.getInstance("MD5")
+            val b = s.getBytes(StandardCharsets.UTF_8)
+            m.update(b, 0, b.length)
+            new BigInteger(1, m.digest()).toString(16)
+        }
     }
 
     /* ------------------------------------------------------------------------------------------------------------- */
