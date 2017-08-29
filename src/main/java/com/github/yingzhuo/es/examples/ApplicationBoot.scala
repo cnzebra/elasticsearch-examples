@@ -89,8 +89,7 @@ object ApplicationBoot extends App {
 
     @Configuration
     @EnableElasticsearchRepositories(basePackages = Array("com.github.yingzhuo.es.examples"))
-    class ApplicationBootConfigElasticsearch {
-    }
+    class ApplicationBootConfigElasticsearch
 
     @Configuration
     class ApplicationBootConfigSecurity @Autowired()(val userDao: UserDao, val passwordHasher: PasswordHasher) extends WebMvcConfigurerAdapter {
@@ -98,7 +97,6 @@ object ApplicationBoot extends App {
         override def addInterceptors(registry: InterceptorRegistry): Unit = {
             registry.addInterceptor(new SecurityInterceptor(userDao, passwordHasher)).addPathPatterns("/**")
         }
-
     }
 
 }

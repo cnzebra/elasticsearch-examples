@@ -10,6 +10,8 @@ package com.github.yingzhuo.es.examples.module.auditing
 
 import javax.persistence._
 
+import com.github.yingzhuo.es.examples.ApplicationContextHolder
+import com.github.yingzhuo.es.examples.dao.ProductDocDao
 import com.github.yingzhuo.es.examples.module.Product
 import com.typesafe.scalalogging.LazyLogging
 
@@ -29,5 +31,8 @@ class ProductListener extends LazyLogging {
     def callbackPostUpdate(product: Product): Unit = {
         logger.debug("post update: {}", product)
     }
+
+    private def productDocDao: ProductDocDao =
+        ApplicationContextHolder.get.getBean[ProductDocDao](classOf[ProductDocDao])
 
 }
