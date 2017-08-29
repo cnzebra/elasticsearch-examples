@@ -8,7 +8,6 @@
 */
 package com.github.yingzhuo.es.examples
 
-import java.util.UUID
 import javax.persistence.EntityManagerFactory
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -16,8 +15,6 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.github.yingzhuo.es.examples.dao.UserDao
 import com.github.yingzhuo.es.examples.module.auditing.AuditorProvider
 import com.github.yingzhuo.es.examples.security.SecurityInterceptor
-import com.github.yingzhuo.es.examples.tool.{IdGenerator, PasswordHasher}
-import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -42,12 +39,13 @@ object ApplicationBoot extends App {
     class ApplicationBootConfigBean {
 
         @Bean
-        def idGenerator(): IdGenerator[String] = new IdGenerator[String] {
-            override def generate: String = UUID.randomUUID().toString.replaceAll("-", "")
-        }
+        def applicationContextHolder(): AnyRef = ApplicationContextHolder()
 
         @Bean
-        def passwordHasher(): PasswordHasher = (s: String) => DigestUtils.md5Hex(s)
+        def idGenerator(): IdGenerator[String] = DefaultStringIdGenerator
+
+        @Bean
+        def passwordHasher(): PasswordHasher = DefaultPasswordHasher
 
     }
 
@@ -90,7 +88,8 @@ object ApplicationBoot extends App {
     }
 
     @Configuration
-    @EnableElasticsearchRepositories(basePackages = Array("com.github.yingzhuo.es.examples")) class ApplicationBootConfigElasticsearch {
+    @EnableElasticsearchRepositories(basePackages = Array("com.github.yingzhuo.es.examples"))
+    class ApplicationBootConfigElasticsearch {
     }
 
     @Configuration

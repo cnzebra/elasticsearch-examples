@@ -8,9 +8,9 @@
 */
 package com.github.yingzhuo.es.examples.service
 
+import com.github.yingzhuo.es.examples.IdGenerator
 import com.github.yingzhuo.es.examples.dao.ProductDao
 import com.github.yingzhuo.es.examples.module.Product
-import com.github.yingzhuo.es.examples.tool.IdGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.{Propagation, Transactional}
