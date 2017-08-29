@@ -14,7 +14,7 @@
         <scala.version>2.12.3</scala.version>
         <springboot.version>1.5.6.RELEASE</springboot.version>
         <spring.version>4.3.10.RELEASE</spring.version>
-        <jackson.version>2.8.9</jackson.version>
+        <jackson.version>2.9.0</jackson.version>
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
@@ -79,6 +79,21 @@
             <artifactId>jackson-module-scala_2.12</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-cbor</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-smile</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
         <!-- scala-logging -->
         <dependency>
@@ -104,6 +119,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.43</version>
+        </dependency>
+
+        <!-- commons -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
         </dependency>
     </dependencies>
 
