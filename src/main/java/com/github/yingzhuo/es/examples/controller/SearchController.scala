@@ -8,17 +8,30 @@
 */
 package com.github.yingzhuo.es.examples.controller
 
-import com.github.yingzhuo.es.examples.model.Product
 import com.github.yingzhuo.es.examples.service.SearchService
+import com.typesafe.scalalogging.LazyLogging
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.{GetMapping, RequestParam, RestController}
+import org.springframework.web.bind.annotation._
 
 @RestController
-class SearchController @Autowired()(val searchService: SearchService) {
+class SearchController @Autowired()(val searchService: SearchService) extends LazyLogging {
 
     @GetMapping(Array("/search/"))
-    def search(@RequestParam(value = "q", required = false) query: String): Iterable[Product] = {
-        searchService.findAll(query)
+    def search(@RequestParam(value = "q", required = false) query: String,
+               @RequestParam(value = "page", required = false, defaultValue = "1") pageNumber: Int,
+               @RequestParam(value = "size", required = false, defaultValue = "20") pageSize: Int): Json = {
+
+        logger.debug("page={}", pageNumber)
+        logger.debug("size={}", pageSize)
+
+        val (pageable, p, s) = (pageNumber, pageSize).asPageable
+        val result = searchService.findAll(query, pageable)
+
+        Json(
+            "result" -> result,
+            "page" -> p,
+            "size" -> s
+        )
     }
 
 }

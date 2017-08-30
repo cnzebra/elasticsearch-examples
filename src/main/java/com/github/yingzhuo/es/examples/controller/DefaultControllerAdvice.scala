@@ -17,8 +17,10 @@ class DefaultControllerAdvice {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    def handleRefusedException(ex: RefusedOperationException): Json = {
-        Json("401", "401", Map())
-    }
+    def handleRefusedException(ex: RefusedOperationException): Json = Json("401", "401")
+
+    @ExceptionHandler
+    @ResponseStatus
+    def handleException(ex: Exception): Json = Json("500", "500")
 
 }

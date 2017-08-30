@@ -5,7 +5,7 @@ spring:
   application:
     name: "es-examples"
   profiles:
-    active: default
+    active: debug
   main:
     banner-mode: "log"
   aop:
@@ -39,7 +39,7 @@ spring:
         strategy: "org.hibernate.cfg.ImprovedNamingStrategy"
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
   data:
     elasticsearch:
       repositories:

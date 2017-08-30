@@ -8,7 +8,9 @@
 */
 package com.github.yingzhuo.es.examples
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.github.yingzhuo.es.examples.model.Product
+import org.springframework.data.domain.{PageRequest, Pageable}
 
 import scala.beans.BeanProperty
 
@@ -20,10 +22,12 @@ package object controller {
 
         def apply(p: Map[String, Any]): Json = new Json(p)
 
-        def apply(t: (String, Any)): Json = Json(Map(t._1 -> t._2))
+        def apply(pairs: (String, Any)*): Json = Json(Map(pairs: _*))
     }
 
+    @JsonIgnoreProperties(Array("empty"))
     final case class Json(code: String = "200", errorMessage: String = null, payload: Map[String, Any] = Map()) {
+
         def this(p: Map[String, Any]) = this(payload = p)
 
         def size: Int = payload match {
@@ -31,7 +35,7 @@ package object controller {
             case _ => payload.size
         }
 
-        def empty: Boolean = payload match {
+        def isEmpty: Boolean = payload match {
             case null => true
             case _ => payload.isEmpty
         }
@@ -60,6 +64,21 @@ package object controller {
             prod.price = form.price
             prod.description = form.description
             prod
+        }
+    }
+
+    /* Pageable */
+
+    implicit final class RichPageNumberPageSizePair(val pair: (Int, Int)) {
+
+        def asPageable: (Pageable, Int, Int) = {
+            def cu(p: (Int, Int)): (Int, Int) = {
+                val (page, size) = p
+                (if (page <= 0) 1 else page, if (size <= 0) 20 else size)
+            }
+
+            val pp = cu(pair)
+            (new PageRequest(pp._1 - 1, pp._2), pp._1, pp._2)
         }
     }
 

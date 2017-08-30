@@ -9,32 +9,31 @@
 package com.github.yingzhuo.es.examples.service
 
 import com.github.yingzhuo.es.examples.dao.ProductDocDao
-import com.github.yingzhuo.es.examples.model.Product
+import com.github.yingzhuo.es.examples.model.{Product, ProductDoc}
 import org.elasticsearch.index.query.QueryBuilders
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.{Page, Pageable}
 import org.springframework.stereotype.Service
 
 import scala.collection.JavaConverters._
 
 trait SearchService {
 
-    def findAll(q: String = null): Iterable[Product]
-
+    def findAll(q: String, pageable: Pageable): Iterable[Product]
 }
 
 @Service("searchService")
 class SearchServiceImpl @Autowired()(val productDocDao: ProductDocDao) extends SearchService {
 
-    override def findAll(q: String): Iterable[Product] = {
-        val docs =
+    override def findAll(q: String, pageable: Pageable): Iterable[Product] = {
+        val docPage: Page[ProductDoc] =
             if (q == null || q.isEmpty) {
-                productDocDao.findAll().asScala
+                productDocDao.findAll(pageable)
             } else {
                 val query = QueryBuilders.queryStringQuery(q)
-                productDocDao.search(query).asScala
+                productDocDao.search(query, pageable)
             }
 
-        docs.map(_.toProduct)
+        docPage.getContent.asScala.map(_.toProduct)
     }
-
 }

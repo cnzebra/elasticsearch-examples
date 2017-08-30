@@ -14,10 +14,11 @@ import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.github.yingzhuo.es.examples.PasswordHasher
 import com.github.yingzhuo.es.examples.dao.UserDao
 import com.typesafe.scalalogging.LazyLogging
+import org.springframework.core.Ordered
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 
-class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHasher) extends HandlerInterceptorAdapter with LazyLogging {
+class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHasher) extends HandlerInterceptorAdapter with Ordered with LazyLogging {
 
     override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any): Boolean = {
 
@@ -31,8 +32,7 @@ class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHash
             val clzName = m.getDeclaringClass.getName
             val methodName = m.getName
 
-            logger.trace("认证与授权检查:")
-            logger.trace("方法: {}", s"$clzName.$methodName(..)")
+            logger.trace("认证与授权检查: {}", s"$clzName.$methodName(..)")
         }
 
         request match {
@@ -56,6 +56,5 @@ class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHash
         }
     }
 
-
-
+    override def getOrder: Int = Ordered.LOWEST_PRECEDENCE
 }
