@@ -121,6 +121,13 @@
             <version>5.1.43</version>
         </dependency>
 
+        <!-- joda-time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+
         <!-- commons -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -169,7 +176,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <scalaVersion>2.12.3</scalaVersion>
+                    <scalaVersion>${scala.version}</scalaVersion>
                     <recompileMode>incremental</recompileMode>
                     <useZincServer>true</useZincServer>
                     <args>

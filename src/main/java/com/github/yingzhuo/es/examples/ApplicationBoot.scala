@@ -18,8 +18,7 @@ import com.github.yingzhuo.es.examples.security.SecurityInterceptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
-import org.springframework.core.env.Environment
+import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, Profile}
 import org.springframework.data.domain.AuditorAware
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories
 import org.springframework.data.jpa.repository.config.{EnableJpaAuditing, EnableJpaRepositories}
@@ -59,12 +58,10 @@ object ApplicationBoot extends App {
     }
 
     @Configuration
-    class ApplicationBootConfigMvc @Autowired()(env: Environment) extends WebMvcConfigurerAdapter {
+    class ApplicationBootConfigMvc extends WebMvcConfigurerAdapter {
 
         override def addInterceptors(registry: InterceptorRegistry): Unit = {
-            if (Set(env.getActiveProfiles: _*).contains("debug")) {
-                registry.addInterceptor(LoggingInterceptor).addPathPatterns("/**")
-            }
+            registry.addInterceptor(DebugLoggingInterceptor).addPathPatterns("/**")
         }
 
         override def configurePathMatch(configurer: PathMatchConfigurer): Unit = {
