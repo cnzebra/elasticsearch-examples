@@ -8,9 +8,9 @@
 */
 package com.github.yingzhuo.es.examples
 
-package object module {
+package object model {
 
-    import com.github.yingzhuo.es.examples.module._
+    import com.github.yingzhuo.es.examples.model._
 
     implicit final class RichProductDoc(val doc: ProductDoc) {
         require(doc != null)

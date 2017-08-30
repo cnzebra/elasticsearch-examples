@@ -6,12 +6,13 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module
+package com.github.yingzhuo.es.examples.model
 
 import java.util.Date
 import javax.persistence._
 
-import com.github.yingzhuo.es.examples.module.auditing.ProductListener
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.github.yingzhuo.es.examples.model.auditing.ProductListener
 import org.springframework.data.annotation.{CreatedBy, CreatedDate, LastModifiedDate}
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
@@ -20,6 +21,7 @@ import scala.beans.BeanProperty
 @Entity
 @Table(name = "`T_PRODUCT`")
 @EntityListeners(Array(classOf[AuditingEntityListener], classOf[ProductListener]))
+@JsonIgnoreProperties(Array("lastModified", "created", "auditorId"))
 class Product extends Serializable {
 
     @Id

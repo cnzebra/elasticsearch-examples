@@ -8,7 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.dao
 
-import com.github.yingzhuo.es.examples.module.User
+import com.github.yingzhuo.es.examples.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 trait UserDao extends JpaRepository[User, String] with UserExtDao {

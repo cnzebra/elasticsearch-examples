@@ -6,33 +6,30 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module.auditing
+package com.github.yingzhuo.es.examples.model.auditing
 
 import javax.persistence._
 
 import com.github.yingzhuo.es.examples.ApplicationContextHolder
 import com.github.yingzhuo.es.examples.dao.ProductDocDao
-import com.github.yingzhuo.es.examples.module.Product
+import com.github.yingzhuo.es.examples.model.Product
 import com.typesafe.scalalogging.LazyLogging
 
 class ProductListener extends LazyLogging {
 
     @PostPersist
-    def callbackPostPersist(product: Product): Unit = {
-        logger.debug("post persist: {}", product)
+    @PostUpdate
+    def callbackPostPersistOrUpdate(product: Product): Unit = {
+        logger.debug("post persist or update: {}", product)
+        val doc = product.toProductDoc
+        productDocDao.save(doc)
     }
 
     @PostRemove
     def callbackPostRemove(product: Product): Unit = {
         logger.debug("post remove: {}", product)
+        productDocDao.delete(product.id)
     }
 
-    @PostUpdate
-    def callbackPostUpdate(product: Product): Unit = {
-        logger.debug("post update: {}", product)
-    }
-
-    private def productDocDao: ProductDocDao =
-        ApplicationContextHolder.get.getBean[ProductDocDao](classOf[ProductDocDao])
-
+    private def productDocDao: ProductDocDao = ApplicationContextHolder.get.getBean(classOf[ProductDocDao])
 }

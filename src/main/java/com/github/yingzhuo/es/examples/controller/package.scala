@@ -8,7 +8,7 @@
 */
 package com.github.yingzhuo.es.examples
 
-import com.github.yingzhuo.es.examples.module.Product
+import com.github.yingzhuo.es.examples.model.Product
 
 import scala.beans.BeanProperty
 

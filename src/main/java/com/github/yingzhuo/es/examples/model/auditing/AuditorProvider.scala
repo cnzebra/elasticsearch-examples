@@ -6,16 +6,16 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.security
+package com.github.yingzhuo.es.examples.model.auditing
 
-import com.github.yingzhuo.es.examples.model.User
+import com.github.yingzhuo.es.examples.security.SecurityContext
+import org.springframework.data.domain.AuditorAware
 
-object SecurityContext {
+object AuditorProvider extends AuditorAware[String] {
 
-    private[security] val holder: ThreadLocal[User] = ThreadLocal.withInitial(() => null)
-
-    def get: User = holder.get()
-
-    def getOption: Option[User] = Option(get)
+    override def getCurrentAuditor: String = SecurityContext.getOption match {
+        case Some(u) => u.name
+        case _ => null
+    }
 
 }

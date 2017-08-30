@@ -1,4 +1,4 @@
-package com.github.yingzhuo.es.examples.module
+package com.github.yingzhuo.es.examples.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.elasticsearch.annotations.Document

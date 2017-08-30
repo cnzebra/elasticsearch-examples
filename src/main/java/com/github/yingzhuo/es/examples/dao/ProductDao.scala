@@ -8,7 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.dao
 
-import com.github.yingzhuo.es.examples.module.Product
+import com.github.yingzhuo.es.examples.model.Product
 import org.springframework.data.jpa.repository.JpaRepository
 
 trait ProductDao extends JpaRepository[Product, String] with ProductExtDao

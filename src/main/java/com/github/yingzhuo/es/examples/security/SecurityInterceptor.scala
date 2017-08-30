@@ -31,7 +31,7 @@ class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHash
             val clzName = m.getDeclaringClass.getName
             val methodName = m.getName
 
-            logger.trace("认证于授权检查:")
+            logger.trace("认证与授权检查:")
             logger.trace("方法: {}", s"$clzName.$methodName(..)")
         }
 
@@ -42,16 +42,16 @@ class SecurityInterceptor(val userDao: UserDao, val passwordHasher: PasswordHash
 
 
                 if (exists.isEmpty) {
-                    logger.trace("认证或授权错误")
+                    logger.trace("认证与授权错误")
                     throw new RefusedOperationException
                 } else {
-                    logger.trace("认证或授权无误")
+                    logger.trace("认证与授权正确")
                     SecurityContext.holder.set(exists.get)
                 }
 
                 true
             case _ =>
-                logger.debug("认证或授权缺失")
+                logger.debug("认证与授权缺失")
                 throw new RefusedOperationException
         }
     }

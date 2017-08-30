@@ -6,30 +6,19 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.module
+package com.github.yingzhuo.es.examples.controller
 
-import javax.persistence._
+import com.github.yingzhuo.es.examples.model.Product
+import com.github.yingzhuo.es.examples.service.SearchService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.{GetMapping, RequestParam, RestController}
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
+@RestController
+class SearchController @Autowired()(val searchService: SearchService) {
 
-import scala.beans.BeanProperty
-
-@Entity
-@Table(name = "`T_USER`")
-@EntityListeners(Array(classOf[AuditingEntityListener]))
-class User extends Serializable {
-
-    @Id
-    @Column(name = "`ID`", length = 32)
-    @BeanProperty
-    var id: String = _
-
-    @Column(name = "`NAME`", length = 50)
-    @BeanProperty
-    var name: String = _
-
-    @Column(name = "`PWD`", length = 32)
-    @BeanProperty
-    var password: String = _
+    @GetMapping(Array("/search/"))
+    def search(@RequestParam(value = "q", required = false) query: String): Iterable[Product] = {
+        searchService.findAll(query)
+    }
 
 }
