@@ -10,11 +10,8 @@ package com.github.yingzhuo.es.examples.model
 
 import javax.persistence._
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener
-
 @Entity
 @Table(name = "`T_USER`")
-@EntityListeners(Array(classOf[AuditingEntityListener]))
 class User extends Serializable {
 
     @Id

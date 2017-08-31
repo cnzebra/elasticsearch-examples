@@ -10,19 +10,15 @@ package com.github.yingzhuo.es.examples.model
 
 import javax.persistence._
 
-import scala.beans.BeanProperty
-
 @Entity
 @Table(name = "`T_ROLE`")
 class Role extends Serializable {
 
     @Id
     @Column(name = "`ID`")
-    @BeanProperty
     var id: String = _
 
     @Column(name = "`NAME`")
-    @BeanProperty
     var name: String = _
 
 }
