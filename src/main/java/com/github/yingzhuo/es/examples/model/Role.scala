@@ -8,6 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.model
 
+import java.util
 import javax.persistence._
 
 @Entity
@@ -21,4 +22,22 @@ class Role extends Serializable {
     @Column(name = "`NAME`")
     var name: String = _
 
+    @ManyToMany(mappedBy = "roles")
+    var users: util.Set[User] = _
+
+    override def toString: String = s"Role(id=$id, name=$name)"
+
+    def canEqual(other: Any): Boolean = other.isInstanceOf[Role]
+
+    override def equals(other: Any): Boolean = other match {
+        case that: Role =>
+            (that canEqual this) &&
+                id == that.id
+        case _ => false
+    }
+
+    override def hashCode(): Int = {
+        val state = Seq(id)
+        state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+    }
 }

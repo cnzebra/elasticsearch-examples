@@ -12,8 +12,6 @@ import scala.collection.JavaConverters._
 
 package object model {
 
-    import com.github.yingzhuo.es.examples.model._
-
     implicit final class RichProductDoc(val doc: ProductDoc) {
         require(doc != null)
 

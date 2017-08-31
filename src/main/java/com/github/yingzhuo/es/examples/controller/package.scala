@@ -43,15 +43,11 @@ package object controller {
 
     /* Form */
 
-    final class ProductForm {
-        @BeanProperty
-        var id: String = _
-        @BeanProperty
-        var name: String = _
-        @BeanProperty
-        var price: Double = _
-        @BeanProperty
-        var description: String = _
+    class ProductForm {
+        @BeanProperty var id: String = _
+        @BeanProperty var name: String = _
+        @BeanProperty var price: Double = _
+        @BeanProperty var description: String = _
     }
 
     implicit final class RichProductForm(val form: ProductForm) {

@@ -17,4 +17,17 @@ class ProductDoc extends Serializable {
 
     override def toString: String = s"ProductDoc(id=$id)"
 
+    def canEqual(other: Any): Boolean = other.isInstanceOf[ProductDoc]
+
+    override def equals(other: Any): Boolean = other match {
+        case that: ProductDoc =>
+            (that canEqual this) &&
+                id == that.id
+        case _ => false
+    }
+
+    override def hashCode(): Int = {
+        val state = Seq(id)
+        state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+    }
 }

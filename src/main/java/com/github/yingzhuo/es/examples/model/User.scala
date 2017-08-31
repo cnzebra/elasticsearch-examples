@@ -8,6 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.model
 
+import java.util
 import javax.persistence._
 
 @Entity
@@ -30,6 +31,21 @@ class User extends Serializable {
         joinColumns = Array(new JoinColumn(name = "USER_ID")),
         inverseJoinColumns = Array(new JoinColumn(name = "ROLE_ID"))
     )
-    var roles: java.util.Set[Role] = _
+    var roles: util.Set[Role] = _
 
+    override def toString: String = s"User(id=$id, name=$name)"
+
+    def canEqual(other: Any): Boolean = other.isInstanceOf[User]
+
+    override def equals(other: Any): Boolean = other match {
+        case that: User =>
+            (that canEqual this) &&
+                id == that.id
+        case _ => false
+    }
+
+    override def hashCode(): Int = {
+        val state = Seq(id)
+        state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+    }
 }

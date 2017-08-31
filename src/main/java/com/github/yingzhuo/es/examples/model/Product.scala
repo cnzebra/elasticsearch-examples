@@ -50,4 +50,18 @@ class Product extends Serializable {
     var auditorId: String = _
 
     override def toString: String = s"Product(id=$id)"
+
+    def canEqual(other: Any): Boolean = other.isInstanceOf[Product]
+
+    override def equals(other: Any): Boolean = other match {
+        case that: Product =>
+            (that canEqual this) &&
+                id == that.id
+        case _ => false
+    }
+
+    override def hashCode(): Int = {
+        val state = Seq(id)
+        state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+    }
 }
