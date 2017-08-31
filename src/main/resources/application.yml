@@ -45,7 +45,7 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
-      cluster-name: ""
+      cluster-name: elasticsearch
       cluster-nodes: 10.211.55.18:9300
 
 # ----------------------------------------------------------------------------------------------------------------------

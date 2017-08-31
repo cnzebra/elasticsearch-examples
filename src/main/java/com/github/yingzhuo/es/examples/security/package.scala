@@ -23,13 +23,14 @@ package object security {
 
     class InvalidOperationException extends Exception
 
-    protected abstract class AbstractSecurityInterceptor extends HandlerInterceptorAdapter with Ordered with LazyLogging {
+    abstract class AbstractSecurityInterceptor extends HandlerInterceptorAdapter with Ordered with LazyLogging {
 
         final override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean = {
             def getMethod(handler: Any): Method = handler match {
                 case x: HandlerMethod => x.getMethod
                 case _ => null
             }
+
             prehandle(request, response, getMethod(handler))
             true
         }
