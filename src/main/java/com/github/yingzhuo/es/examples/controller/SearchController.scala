@@ -8,6 +8,7 @@
 */
 package com.github.yingzhuo.es.examples.controller
 
+import com.github.yingzhuo.es.examples.security.RequiresRoles
 import com.github.yingzhuo.es.examples.service.SearchService
 import com.typesafe.scalalogging.LazyLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation._
 class SearchController @Autowired()(val searchService: SearchService) extends LazyLogging {
 
     @GetMapping(Array("/search/"))
+    @RequiresRoles(Array("ROLE_USER"))
     def search(@RequestParam(value = "q", required = false) query: String,
                @RequestParam(value = "page", required = false, defaultValue = "1") pageNumber: Int,
                @RequestParam(value = "size", required = false, defaultValue = "20") pageSize: Int): Json = {

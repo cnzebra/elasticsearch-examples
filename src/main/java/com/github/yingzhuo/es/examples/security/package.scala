@@ -8,17 +8,34 @@
 */
 package com.github.yingzhuo.es.examples
 
+import java.lang.reflect.Method
 import java.nio.charset.{Charset, StandardCharsets}
 import java.util.Base64
 import javax.servlet.ServletRequest
-import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+
+import com.typesafe.scalalogging.LazyLogging
+import org.springframework.core.Ordered
+import org.springframework.web.method.HandlerMethod
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 
 package object security {
 
-    /*
-     * 认证异常
-     */
-    class RefusedOperationException extends Exception
+    class InvalidOperationException extends Exception
+
+    protected abstract class AbstractSecurityInterceptor extends HandlerInterceptorAdapter with Ordered with LazyLogging {
+
+        final override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean = {
+            def getMethod(handler: Any): Method = handler match {
+                case x: HandlerMethod => x.getMethod
+                case _ => null
+            }
+            prehandle(request, response, getMethod(handler))
+            true
+        }
+
+        def prehandle(request: HttpServletRequest, response: HttpServletResponse, method: Method): Unit
+    }
 
     object BasicAuthentication {
 

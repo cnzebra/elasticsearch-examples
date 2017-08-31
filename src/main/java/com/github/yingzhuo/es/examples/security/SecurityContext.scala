@@ -12,10 +12,12 @@ import com.github.yingzhuo.es.examples.model.User
 
 object SecurityContext {
 
-    private[security] val holder: ThreadLocal[User] = ThreadLocal.withInitial(() => null)
+    private[security] val userHolder: ThreadLocal[User] = ThreadLocal.withInitial(() => null)
+    private[security] val roleNamesHolder: ThreadLocal[Set[String]] = ThreadLocal.withInitial(() => Set())
 
-    def get: User = holder.get()
+    def get: User = userHolder.get()
 
     def getOption: Option[User] = Option(get)
 
+    def getRoleNames: Set[String] = roleNamesHolder.get
 }

@@ -6,25 +6,17 @@
 *  '   \___|_|\__,_|___/\__|_|\___|___/\___|\__,_|_|  \___|_| |_|      \___/_/\_\__,_|_| |_| |_| .__/|_|\___||___/ / / / /
 * =============================================================================================|_|=============== /_/_/_/
 */
-package com.github.yingzhuo.es.examples.controller
+package com.github.yingzhuo.es.examples.security;
 
-import com.github.yingzhuo.es.examples.security.InvalidOperationException
-import com.typesafe.scalalogging.LazyLogging
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.{ExceptionHandler, ResponseStatus, RestControllerAdvice}
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@RestControllerAdvice
-class DefaultControllerAdvice extends LazyLogging {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface RequiresRoles {
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    def handleRefusedException(ex: InvalidOperationException): Json = Json("401", "401")
-
-    @ExceptionHandler
-    @ResponseStatus
-    def handleException(ex: Exception): Json = {
-        logger.error(ex.getMessage, ex)
-        Json("500", "500")
-    }
+    public String[] value();
 
 }

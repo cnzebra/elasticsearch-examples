@@ -14,7 +14,7 @@ import javax.persistence.EntityManagerFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.github.yingzhuo.es.examples.model.auditing.AuditorProvider
-import com.github.yingzhuo.es.examples.security.SecurityInterceptor
+import com.github.yingzhuo.es.examples.security.{AuthenticationInterceptor, AuthorizationInterceptor}
 import com.github.yingzhuo.es.examples.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
@@ -132,9 +132,9 @@ object ApplicationBoot extends App {
 
     @Configuration
     class ApplicationBootConfigSecurity @Autowired()(val userService: UserService, val passwordHasher: PasswordHasher) extends WebMvcConfigurerAdapter {
-
         override def addInterceptors(registry: InterceptorRegistry): Unit = {
-            registry.addInterceptor(new SecurityInterceptor(userService, passwordHasher)).addPathPatterns("/**")
+            registry.addInterceptor(new AuthenticationInterceptor(userService, passwordHasher)).addPathPatterns("/**")
+            registry.addInterceptor(new AuthorizationInterceptor).addPathPatterns("/**")
         }
     }
 

@@ -13,27 +13,12 @@ import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.github.yingzhuo.es.examples.PasswordHasher
 import com.github.yingzhuo.es.examples.service.UserService
-import com.typesafe.scalalogging.LazyLogging
 import org.springframework.core.Ordered
-import org.springframework.web.method.HandlerMethod
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 
-class SecurityInterceptor(val userService: UserService, val passwordHasher: PasswordHasher) extends HandlerInterceptorAdapter with Ordered with LazyLogging {
+class AuthenticationInterceptor(val userService: UserService, val passwordHasher: PasswordHasher) extends AbstractSecurityInterceptor {
 
-    override def preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: scala.Any): Boolean = {
-
-        def getMethod(handler: scala.Any): Option[Method] = handler match {
-            case hm: HandlerMethod => Some(hm.getMethod)
-            case _ => None
-        }
-
-        // log
-        getMethod(handler) foreach { m =>
-            val clzName = m.getDeclaringClass.getName
-            val methodName = m.getName
-
-            logger.trace("认证与授权检查: {}", s"$clzName.$methodName(..)")
-        }
+    override def prehandle(request: HttpServletRequest, response: HttpServletResponse, m: Method): Unit = {
+        logger.trace("认证检查: {}", s"${m.getDeclaringClass.getName}.${m.getName}(..)")
 
         request match {
             case BasicAuthentication(username, password) =>
@@ -41,19 +26,18 @@ class SecurityInterceptor(val userService: UserService, val passwordHasher: Pass
                 val exists = Option(userService.login(username, hashed))
 
                 if (exists.isEmpty) {
-                    logger.trace("认证与授权错误")
-                    throw new RefusedOperationException
+                    logger.trace("认证NG")
+                    throw new InvalidOperationException
                 } else {
-                    logger.trace("认证与授权正确")
-                    SecurityContext.holder.set(exists.get)
+                    logger.trace("认证OK")
+                    SecurityContext.userHolder.set(exists.get)
+                    SecurityContext.roleNamesHolder.set(exists.get.roleNames)
                 }
-
-                true
             case _ =>
-                logger.debug("认证与授权缺失")
-                throw new RefusedOperationException
+                logger.debug("认证条件缺失")
+                throw new InvalidOperationException
         }
     }
 
-    override def getOrder: Int = Ordered.LOWEST_PRECEDENCE
+    override def getOrder: Int = Ordered.LOWEST_PRECEDENCE - 1
 }

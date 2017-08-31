@@ -8,6 +8,8 @@
 */
 package com.github.yingzhuo.es.examples
 
+import scala.collection.JavaConverters._
+
 package object model {
 
     import com.github.yingzhuo.es.examples.model._
@@ -37,4 +39,11 @@ package object model {
             doc
         }
     }
+
+    implicit final class RichUser(val user: User) {
+        require(user != null)
+
+        def roleNames: Set[String] = user.roles.asScala.map(_.name).toSet
+    }
+
 }

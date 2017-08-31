@@ -12,8 +12,6 @@ import javax.persistence._
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
-import scala.beans.BeanProperty
-
 @Entity
 @Table(name = "`T_USER`")
 @EntityListeners(Array(classOf[AuditingEntityListener]))
@@ -21,15 +19,20 @@ class User extends Serializable {
 
     @Id
     @Column(name = "`ID`", length = 32)
-    @BeanProperty
     var id: String = _
 
     @Column(name = "`NAME`", length = 50)
-    @BeanProperty
     var name: String = _
 
     @Column(name = "`PWD`", length = 32)
-    @BeanProperty
     var password: String = _
+
+    @ManyToMany
+    @JoinTable(
+        name = "T_USER_ROLE",
+        joinColumns = Array(new JoinColumn(name = "USER_ID")),
+        inverseJoinColumns = Array(new JoinColumn(name = "ROLE_ID"))
+    )
+    var roles: java.util.Set[Role] = _
 
 }
