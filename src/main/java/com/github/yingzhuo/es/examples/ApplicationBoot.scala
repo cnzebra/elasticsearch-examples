@@ -8,17 +8,24 @@
 */
 package com.github.yingzhuo.es.examples
 
+import java.util
 import javax.persistence.EntityManagerFactory
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.github.yingzhuo.es.examples.dao.UserDao
 import com.github.yingzhuo.es.examples.model.auditing.AuditorProvider
 import com.github.yingzhuo.es.examples.security.SecurityInterceptor
+import com.github.yingzhuo.es.examples.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, Profile}
+import org.springframework.cache.CacheManager
+import org.springframework.cache.annotation.{CachingConfigurerSupport, EnableCaching}
+import org.springframework.cache.ehcache.{EhCacheCacheManager, EhCacheManagerFactoryBean}
+import org.springframework.cache.interceptor.{KeyGenerator, SimpleKeyGenerator}
+import org.springframework.cache.support.CompositeCacheManager
+import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
+import org.springframework.core.io.ClassPathResource
 import org.springframework.data.domain.AuditorAware
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories
 import org.springframework.data.jpa.repository.config.{EnableJpaAuditing, EnableJpaRepositories}
@@ -97,10 +104,37 @@ object ApplicationBoot extends App {
     class ApplicationBootConfigElasticsearch
 
     @Configuration
-    class ApplicationBootConfigSecurity @Autowired()(val userDao: UserDao, val passwordHasher: PasswordHasher) extends WebMvcConfigurerAdapter {
+    @EnableCaching
+    class ApplicationBootConfigCache extends CachingConfigurerSupport {
+
+        @Bean
+        def ehCacheManagerFactoryBean: EhCacheManagerFactoryBean = {
+            val cacheManagerFactoryBean = new EhCacheManagerFactoryBean
+            cacheManagerFactoryBean.setConfigLocation(new ClassPathResource("META-INF/ehcache.xml"))
+            cacheManagerFactoryBean.setShared(true)
+            cacheManagerFactoryBean
+        }
+
+        @Bean
+        def ehCacheCacheManager = new EhCacheCacheManager(ehCacheManagerFactoryBean.getObject)
+
+        override def keyGenerator: KeyGenerator = new SimpleKeyGenerator
+
+        override def cacheManager: CacheManager = {
+            val cacheManagers: util.List[CacheManager] = new util.LinkedList[CacheManager]
+            if (ehCacheCacheManager != null) cacheManagers.add(ehCacheCacheManager)
+            val cacheManager: CompositeCacheManager = new CompositeCacheManager
+            cacheManager.setCacheManagers(cacheManagers)
+            cacheManager.setFallbackToNoOpCache(false)
+            cacheManager
+        }
+    }
+
+    @Configuration
+    class ApplicationBootConfigSecurity @Autowired()(val userService: UserService, val passwordHasher: PasswordHasher) extends WebMvcConfigurerAdapter {
 
         override def addInterceptors(registry: InterceptorRegistry): Unit = {
-            registry.addInterceptor(new SecurityInterceptor(userDao, passwordHasher)).addPathPatterns("/**")
+            registry.addInterceptor(new SecurityInterceptor(userService, passwordHasher)).addPathPatterns("/**")
         }
     }
 

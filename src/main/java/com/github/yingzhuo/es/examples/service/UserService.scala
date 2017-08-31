@@ -8,36 +8,25 @@
 */
 package com.github.yingzhuo.es.examples.service
 
-import com.github.yingzhuo.es.examples.dao.ProductDocDao
-import com.github.yingzhuo.es.examples.model.Product
+import com.github.yingzhuo.es.examples.dao.UserDao
+import com.github.yingzhuo.es.examples.model.User
 import com.typesafe.scalalogging.LazyLogging
-import org.elasticsearch.index.query.QueryBuilders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.{Propagation, Transactional}
 
-import scala.collection.JavaConverters._
+trait UserService {
 
-trait SearchService {
+    def login(name: String, password: String): User
 
-    def findAll(q: String, pageable: Pageable): Iterable[Product]
 }
 
-@Service("searchService")
-class SearchServiceImpl @Autowired()(val productDocDao: ProductDocDao) extends SearchService with LazyLogging {
+@Service("userService")
+class UserServiceImpl @Autowired()(val userDao: UserDao) extends UserService with LazyLogging {
 
-    @Cacheable(cacheNames = Array("productSearchingCache"), unless = "#root == null")
-    override def findAll(q: String, pageable: Pageable): Iterable[Product] = {
-        logger.debug("全文索引: q='{}'", q)
-
-        val docPage =
-            if (q == null || q.isEmpty) productDocDao.findAll(pageable) else {
-                val query = QueryBuilders.queryStringQuery(q)
-                productDocDao.search(query, pageable)
-            }
-
-        docPage.getContent.asScala.map(_.toProduct)
-    }
+    @Cacheable(cacheNames = Array("userLogingCache"), unless = "#root == null")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    override def login(name: String, password: String): User = userDao.findByNameAndPassword(name, password)
 
 }
